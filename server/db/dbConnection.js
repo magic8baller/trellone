@@ -1,11 +1,11 @@
 const dbConfig = require('./dbConfig.js')
-const pgp = require('pg-promise')
+const { Pool } = require('pg')
 
-const db = pgp(dbConfig);
+const pool = new Pool(dbConfig);
 
-db.any('select * from user')
-	.then(userData => console.log('DATA:', userData))
-	.catch(err => console.log('ERROR:', err))
-	.finally(db.$pool.end)
+pool.query('SELECT * FROM user', (err, res) => {
+	if (err) return console.error('error:', err)
+	console.log('response:', res.rows)
+})
 
-module.exports = db;
+module.exports = pool;
